@@ -1,11 +1,11 @@
 # omo-switch
 
-一个简单的 Rust CLI 工具，用于快速切换 OpenCode 配置文件中的 `oh-my-opencode` 插件状态。
+一个简单的 Rust CLI 工具，用于管理 OpenCode 配置文件中的 `oh-my-opencode` 插件状态。
 
 ## 功能
 
 - 自动定位 OpenCode 配置文件（跨平台支持）
-- 一键切换 `oh-my-opencode` 插件的启用/禁用状态
+- 支持启用、禁用、查看状态的子命令
 - 安全的原子写入，避免配置文件损坏
 
 ## 安装
@@ -18,26 +18,40 @@ cargo install --path .
 
 ## 使用
 
-直接运行命令即可切换插件状态：
-
 ```bash
-omos
+# 启用 oh-my-opencode 插件
+omos on
+
+# 禁用 oh-my-opencode 插件
+omos off
+
+# 查看当前插件状态（短命令: s）
+omos status
+omos s
 ```
 
 ### 示例输出
 
-启用插件时：
+启用插件：
 ```
-配置文件路径: C:\Users\username\AppData\Roaming\opencode\opencode.json
 ✓ 已启用 oh-my-opencode 插件
+```
+
+禁用插件：
+```
+✗ 已禁用 oh-my-opencode 插件
+```
+
+查看状态：
+```
+配置文件: C:\Users\username\AppData\Roaming\opencode\opencode.json
+状态: ● oh-my-opencode 插件已启用
 当前插件列表: ["oh-my-opencode"]
 ```
 
-禁用插件时：
+重复操作时会提示：
 ```
-配置文件路径: C:\Users\username\AppData\Roaming\opencode\opencode.json
-✗ 已禁用 oh-my-opencode 插件
-当前插件列表: []
+○ oh-my-opencode 插件已经是启用状态
 ```
 
 ## 配置文件位置
@@ -61,6 +75,7 @@ cargo build --release
 - `anyhow` - 错误处理
 - `dirs` - 跨平台配置目录
 - `colored` - 彩色终端输出
+- `clap` - 命令行参数解析
 
 ## 许可
 
