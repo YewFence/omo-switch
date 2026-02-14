@@ -44,7 +44,7 @@ omos s
 
 查看状态：
 ```
-配置文件: C:\Users\username\AppData\Roaming\opencode\opencode.json
+配置文件: C:\Users\username\.config\opencode\opencode.json
 状态: ● oh-my-opencode 插件已启用
 当前插件列表: ["oh-my-opencode"]
 ```
@@ -56,7 +56,7 @@ omos s
 
 ## 配置文件位置
 
-- **Windows**: `C:\Users\<username>\AppData\Roaming\opencode\opencode.json`
+- **Windows**: `C:\Users\<username>\.config\opencode\opencode.json`
 - **macOS**: `~/.config/opencode/opencode.json`
 - **Linux**: `~/.config/opencode/opencode.json`
 

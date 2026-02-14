@@ -1,7 +1,6 @@
-use anyhow::{Context, Result, bail};
+use anyhow::{bail, Context, Result};
 use clap::{Parser, Subcommand};
 use colored::Colorize;
-use dirs::config_dir;
 use serde::{Deserialize, Serialize};
 use std::fs;
 use std::path::PathBuf;
@@ -34,9 +33,11 @@ struct OpenCodeConfig {
 }
 
 fn get_config_path() -> Result<PathBuf> {
-    let config_dir = config_dir()
-        .context("无法确定配置目录")?;
-    Ok(config_dir.join("opencode").join("opencode.json"))
+    let home_dir = dirs::home_dir().context("无法确定用户主目录")?;
+    Ok(home_dir
+        .join(".config")
+        .join("opencode")
+        .join("opencode.json"))
 }
 
 fn read_config(path: &PathBuf) -> Result<OpenCodeConfig> {
@@ -44,11 +45,10 @@ fn read_config(path: &PathBuf) -> Result<OpenCodeConfig> {
         bail!("配置文件不存在: {}", path.display());
     }
 
-    let content = fs::read_to_string(path)
-        .context("读取配置文件失败")?;
+    let content = fs::read_to_string(path).context("读取配置文件失败")?;
 
-    let config: OpenCodeConfig = serde_json::from_str(&content)
-        .context("解析配置文件失败，JSON 格式可能不正确")?;
+    let config: OpenCodeConfig =
+        serde_json::from_str(&content).context("解析配置文件失败，JSON 格式可能不正确")?;
 
     Ok(config)
 }
@@ -80,15 +80,12 @@ fn disable_plugin(config: &mut OpenCodeConfig) -> bool {
 }
 
 fn write_config(path: &PathBuf, config: &OpenCodeConfig) -> Result<()> {
-    let content = serde_json::to_string_pretty(config)
-        .context("序列化配置失败")?;
+    let content = serde_json::to_string_pretty(config).context("序列化配置失败")?;
 
     let temp_path = path.with_extension("json.tmp");
-    fs::write(&temp_path, content)
-        .context("写入临时文件失败")?;
+    fs::write(&temp_path, content).context("写入临时文件失败")?;
 
-    fs::rename(&temp_path, path)
-        .context("重命名配置文件失败")?;
+    fs::rename(&temp_path, path).context("重命名配置文件失败")?;
 
     Ok(())
 }
