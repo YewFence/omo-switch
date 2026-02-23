@@ -18,6 +18,22 @@ cargo install --path .
 
 ## 使用
 
+直接运行 `omos` 不带参数，会同时显示帮助信息和当前插件状态：
+
+```
+Usage: omos [COMMAND]
+
+Commands:
+  on      启用 oh-my-opencode 插件
+  off     禁用 oh-my-opencode 插件
+  status  查看当前插件状态 [aliases: s]
+
+Options:
+  -h, --help  Print help
+
+当前状态: ● oh-my-opencode 插件已启用
+```
+
 ```bash
 # 启用 oh-my-opencode 插件
 omos on

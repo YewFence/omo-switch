@@ -1,5 +1,5 @@
 use anyhow::{bail, Context, Result};
-use clap::{Parser, Subcommand};
+use clap::{CommandFactory, Parser, Subcommand};
 use colored::Colorize;
 use serde::{Deserialize, Serialize};
 use std::fs;
@@ -10,7 +10,7 @@ use std::path::PathBuf;
 #[command(about = "快速切换 oh-my-opencode 插件状态")]
 struct Cli {
     #[command(subcommand)]
-    command: Commands,
+    command: Option<Commands>,
 }
 
 #[derive(Subcommand)]
@@ -94,7 +94,26 @@ fn main() -> Result<()> {
     let cli = Cli::parse();
     let config_path = get_config_path()?;
 
-    match cli.command {
+    let Some(command) = cli.command else {
+        Cli::command().print_help()?;
+        println!("\n");
+        match read_config(&config_path) {
+            Ok(config) => {
+                let enabled = is_plugin_enabled(&config);
+                if enabled {
+                    println!("当前状态: {} oh-my-opencode 插件已启用", "●".green());
+                } else {
+                    println!("当前状态: {} oh-my-opencode 插件已禁用", "○".yellow());
+                }
+            }
+            Err(e) => {
+                println!("当前状态: {} ({})", "无法读取配置".red(), e);
+            }
+        }
+        return Ok(());
+    };
+
+    match command {
         Commands::On => {
             let mut config = read_config(&config_path)?;
             if enable_plugin(&mut config) {
