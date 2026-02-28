@@ -54,29 +54,45 @@ fn read_config(path: &PathBuf) -> Result<OpenCodeConfig> {
 }
 
 fn is_plugin_enabled(config: &OpenCodeConfig) -> bool {
-    config.plugin.iter().any(|p| p == "oh-my-opencode")
+    config.plugin.iter().any(|p| p == "oh-my-opencode" || p == "oh-my-opencode@latest")
 }
 
 fn enable_plugin(config: &mut OpenCodeConfig) -> bool {
-    let plugin_name = "oh-my-opencode";
-
-    if config.plugin.iter().any(|p| p == plugin_name) {
+    let old_plugin = "oh-my-opencode";
+    let new_plugin = "oh-my-opencode@latest";
+    
+    // 检查是否已经存在任一版本
+    let has_old = config.plugin.iter().any(|p| p == old_plugin);
+    let has_new = config.plugin.iter().any(|p| p == new_plugin);
+    
+    if has_old || has_new {
         false // 已经启用
     } else {
-        config.plugin.push(plugin_name.to_string());
+        // 默认添加新版本
+        config.plugin.push(new_plugin.to_string());
         true // 已添加
     }
 }
 
 fn disable_plugin(config: &mut OpenCodeConfig) -> bool {
-    let plugin_name = "oh-my-opencode";
-
-    if let Some(pos) = config.plugin.iter().position(|p| p == plugin_name) {
+    let old_plugin = "oh-my-opencode";
+    let new_plugin = "oh-my-opencode@latest";
+    
+    let mut removed = false;
+    
+    // 移除旧版本
+    if let Some(pos) = config.plugin.iter().position(|p| p == old_plugin) {
         config.plugin.remove(pos);
-        true // 已删除
-    } else {
-        false // 本来就是禁用状态
+        removed = true;
     }
+    
+    // 移除新版本
+    if let Some(pos) = config.plugin.iter().position(|p| p == new_plugin) {
+        config.plugin.remove(pos);
+        removed = true;
+    }
+    
+    removed
 }
 
 fn write_config(path: &PathBuf, config: &OpenCodeConfig) -> Result<()> {

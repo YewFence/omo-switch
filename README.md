@@ -1,6 +1,6 @@
 # omo-switch
 
-一个简单的 Rust CLI 工具，用于管理 OpenCode 配置文件中的 `oh-my-opencode` 插件状态。
+一个简单的 Rust CLI 工具，用于管理 OpenCode 配置文件中的 `oh-my-opencode` 插件状态（兼容旧版 `oh-my-opencode` 和新版 `oh-my-opencode@latest`）。
 
 ## 功能
 
@@ -24,21 +24,21 @@ cargo install --path .
 Usage: omos [COMMAND]
 
 Commands:
-  on      启用 oh-my-opencode 插件
-  off     禁用 oh-my-opencode 插件
+  on      启用 oh-my-opencode 插件（新安装默认使用 oh-my-opencode@latest）
+  off     禁用 oh-my-opencode 插件（同时移除新旧两个版本）
   status  查看当前插件状态 [aliases: s]
 
 Options:
   -h, --help  Print help
 
-当前状态: ● oh-my-opencode 插件已启用
+当前状态: ● oh-my-opencode 插件已启用（支持 oh-my-opencode 或 oh-my-opencode@latest）
 ```
 
 ```bash
-# 启用 oh-my-opencode 插件
+# 启用 oh-my-opencode 插件（新安装默认使用 @latest 版本）
 omos on
 
-# 禁用 oh-my-opencode 插件
+# 禁用 oh-my-opencode 插件（同时移除新旧两个版本）
 omos off
 
 # 查看当前插件状态（短命令: s）
@@ -62,7 +62,7 @@ omos s
 ```
 配置文件: C:\Users\username\.config\opencode\opencode.json
 状态: ● oh-my-opencode 插件已启用
-当前插件列表: ["oh-my-opencode"]
+当前插件列表: ["oh-my-opencode@latest"]
 ```
 
 重复操作时会提示：
